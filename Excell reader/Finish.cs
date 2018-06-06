@@ -11,7 +11,8 @@ namespace Excell_reader
         private Excel.Application app = null;
         private Excel.Workbook workbook = null;
         private Excel.Worksheet worksheet = null;
-        private Excel.Range workSheet_range = null;
+        private Excel.Range worksheet_range = null;
+        
 
         public void CreateFinishDoc(double workTime)
         {
@@ -21,6 +22,18 @@ namespace Excell_reader
                 app.Visible = true;
                 workbook = app.Workbooks.Add(1);
                 worksheet = (Excel.Worksheet)workbook.Sheets[1];
+
+                Excel.Range cells1 = (Excel.Range)worksheet.get_Range("A6", "A17").Cells;
+                cells1.Merge(Type.Missing);
+                Excel.Borders border = worksheet.Range["A6", "N27"].Borders;
+                border.LineStyle = Excel.XlLineStyle.xlContinuous;
+                
+                
+
+                
+               
+                border.LineStyle = Excel.XlLineStyle.xlContinuous;
+
 
             }
             catch (Exception e)
