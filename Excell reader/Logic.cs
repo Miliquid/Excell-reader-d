@@ -88,7 +88,7 @@ namespace Excell_reader
                             }
 
                         }
-                        //else NumSecond += 1;
+                        //else NumSecond += 1,kll;
                     } while (cil);
                     Marshal.ReleaseComObject(wrsh);
                 } while (SheetCount <= ShCount);
