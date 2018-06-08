@@ -12,7 +12,7 @@ namespace Excell_reader
 
     {
         
-        public void read(string FirstFile, string TeacherFio, double SemestrOne)
+        public void read(string FirstFile, string TeacherFio, double SemestrInsert)
         {
 
 
@@ -65,7 +65,7 @@ namespace Excell_reader
 
 
                             double SemestrTwo = wrsh.Range["F" + NumSecond].Value;
-                            if (SemestrOne == SemestrTwo)
+                            if (SemestrInsert == SemestrTwo)
                             {
                                 string Discpline1 = wrsh.Range["E" + NumSecond].Value;
                                 Discpline1 = Discpline1.Replace(" ", "").Replace("(Экзаменатор)", "");
@@ -76,18 +76,19 @@ namespace Excell_reader
 
                                     Discpline2 =Discpline2.Replace(" ", "").Replace("(Экзаменатор)", "");
                                 }
-                                    if ((Discpline1 == Discpline2)||(Discpline2==null))
-                                    {
-                                        workTime += wrsh.Range["S" + (NumSecond)].Value;
-                                    
-                                    } 
+                                if ((Discpline1 == Discpline2) || (Discpline2 == null))
+                                {
+                                    workTime += wrsh.Range["S" + (NumSecond)].Value;
+                                    System.Windows.MessageBox.Show("+");
+                                }
+                                
                                 
                                 //cil = false;
                                 // System.Windows.MessageBox.Show("Гыыы");
                             }
 
                         }
-                        else NumSecond += 1;
+                        //else NumSecond += 1;
                     } while (cil);
                     Marshal.ReleaseComObject(wrsh);
                 } while (SheetCount <= ShCount);
