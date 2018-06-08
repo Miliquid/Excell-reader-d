@@ -8,3 +8,5 @@ Excell reader/obj/Debug/Excell reader_MarkupCompile.lref
 *.cache
 *.ide
 .vs/Excell reader/v15/.suo
+*.txt
+*.cache
