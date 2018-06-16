@@ -66,7 +66,7 @@ namespace Excel_reader
         {app = new Application.Application { DisplayAlerts = true };
             var Lo = new Logic();
             
-            Lo.read(FFile.Text, Fio.Text, semestr.SelectedIndex);
+            Lo.Read(FFile.Text, Fio.Text, semestr.SelectedIndex);
 
         }
 
