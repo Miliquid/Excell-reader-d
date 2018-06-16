@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Excell_reader.Properties
+namespace Excel_reader.Properties
 {
 
 

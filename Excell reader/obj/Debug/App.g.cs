@@ -9,7 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using Excell_reader;
+using Excel_reader;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -32,7 +32,7 @@ using System.Windows.Shapes;
 using System.Windows.Shell;
 
 
-namespace Excell_reader {
+namespace Excel_reader {
     
     
     /// <summary>
@@ -61,7 +61,7 @@ namespace Excell_reader {
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "4.0.0.0")]
         public static void Main() {
-            Excell_reader.App app = new Excell_reader.App();
+            Excel_reader.App app = new Excel_reader.App();
             app.InitializeComponent();
             app.Run();
         }

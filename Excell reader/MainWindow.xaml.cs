@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using Application = Microsoft.Office.Interop.Excel;
 
-namespace Excell_reader
+namespace Excel_reader
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -66,7 +66,7 @@ namespace Excell_reader
         {app = new Application.Application { DisplayAlerts = true };
             var Lo = new Logic();
             
-            Lo.read(FFile.Text, Fio.Text, semestr.Value);
+            Lo.read(FFile.Text, Fio.Text, semestr.SelectedIndex);
 
         }
 

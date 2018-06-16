@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Excell_reader
+namespace Excel_reader
 {
     /// <summary>
     /// Interaction logic for App.xaml

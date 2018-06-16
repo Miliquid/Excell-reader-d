@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Application = Microsoft.Office.Interop.Excel;
-namespace Excell_reader
+namespace Excel_reader
 {
 	class Logic
 	{
