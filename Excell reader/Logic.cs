@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,12 +12,29 @@ using Range = Microsoft.Office.Interop.Excel.Range;
 
 namespace Excel_reader
 {
-	class Logic
-	{
+    internal class WorkHours 
+    { 
+        public double budget;
+		public double nonBudget;
+
+        public double TotalHours
+		{
+			get { return budget + nonBudget; }
+		}
+    }
+
+	internal class Logic
+	{ 
+        //Константы для работы с таблицой
+		private const string IdColumn = "A";
 		private const string DisciplineColumn = "E";
 		private const string SemesterColumn = "F";
 		private const string TeacherColumn = "P";
-		private const string TotalHoursColumn = "S";
+		//private const string TotalHoursColumn = "S";
+        private const string TotalBudgetHoursColumn = "V";
+        private const string TotalNonBudgetHoursColumn = "W";
+
+
 		private const long StartingRow = 6;
 
 		private Application.Worksheet sheet;
@@ -25,12 +44,17 @@ namespace Excel_reader
         private int selectedSemester;
         private double totalHours = 0;
 
+        private Dictionary<string, WorkHours> hoursPerDiscipline = new Dictionary<string, WorkHours>();
+
 		public void Read(string FirstFile, string TeacherFio, int SemestrInsert)
 		{
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
 			selectedTeacher = TeacherFio.Replace(" ", "").Replace(".", "");
 			selectedSemester = SemestrInsert;
 
 			Application.Application app = new Application.Application { DisplayAlerts = true };
+
 			Application.Workbooks wrbks = app.Workbooks;
 			wrbk = app.Workbooks.Open(Path.Combine(Environment.CurrentDirectory, FirstFile));
 
@@ -38,21 +62,12 @@ namespace Excel_reader
 			{
 				for (int sheetIndex = 1; sheetIndex <= wrbk.Worksheets.Count; sheetIndex++)
                 {
-					sheet = wrbk.Worksheets[sheetIndex];
-					long RowIndex = StartingRow;
-
-					while (GetCell("A", RowIndex).Value != null)
-					{
-						ProcessRow(RowIndex);
-						RowIndex++;
-					}
-
-					Marshal.ReleaseComObject(sheet);
+					ProcessSheet(sheetIndex);
 				}   
 			}
 			catch (Exception E)
 			{
-				System.Windows.MessageBox.Show("Error" + E.Message);
+				System.Windows.MessageBox.Show("Error: " + E.Message + ". Elapsed time: " + stopwatch.Elapsed);
 			}
 			finally
 			{
@@ -62,47 +77,80 @@ namespace Excel_reader
 				Marshal.ReleaseComObject(wrbk);
 				Marshal.ReleaseComObject(wrbks);
 
-				System.Windows.MessageBox.Show(totalHours.ToString());
-			}
-        }
+                string output = "";
 
-        private Range GetCell(string row, long column)
+                foreach(var disciplineName in hoursPerDiscipline.Keys)
+				{
+					output += "Часов по предмету " + disciplineName + 
+                        ": Бюджет: " + hoursPerDiscipline[disciplineName].budget +
+                        ", Не бюджет: " + hoursPerDiscipline[disciplineName].nonBudget +
+						", Всего: " + hoursPerDiscipline[disciplineName].TotalHours + "\n";
+				}
+
+				System.Windows.MessageBox.Show(output + "\nElapsed time: " + stopwatch.Elapsed + "\nDiscipline count = " + hoursPerDiscipline.Count);
+			}
+		}
+
+		private void ProcessSheet(long index)
 		{
-            return sheet.Range[String.Format("{0}{1}", row, column)];
+			sheet = wrbk.Worksheets[index];
+			long RowIndex = StartingRow;
+
+			while (GetCell(IdColumn, RowIndex).Value != null)
+			{
+				ProcessRow(RowIndex);
+				RowIndex++;
+			}
+
+			Marshal.ReleaseComObject(sheet);
 		}
 
         private void ProcessRow(long index)
 		{
-			string teacher = GetCell(TeacherColumn, index).Value;
+			double Semester = GetCell(SemesterColumn, index).Value;			
+            if (selectedSemester != Semester) return;
 
+			string teacher = GetCell(TeacherColumn, index).Value;
 			if (teacher == null) return;
 
 			teacher = teacher.Remove(0, 1).Replace(" ", "").Replace(".", "");
 
 			if (selectedTeacher == teacher)
 			{
-				double SemestrTwo = GetCell(SemesterColumn, index).Value;
-				if (selectedSemester == SemestrTwo)
-				{
-					string Discpline1 =  GetCell(DisciplineColumn, index).Value;
-					Discpline1 = Discpline1.Replace(" ", "").Replace("(Экзаменатор)", "");
-					string Discpline2 = GetCell(DisciplineColumn, index - 1).Value;
-
-					if (Discpline2 != null)
-					{
-						Discpline2 = Discpline2.Replace(" ", "").Replace("(Экзаменатор)", "");
-					}
-					if ((Discpline1 == Discpline2) || (Discpline2 == null))
-					{
-						totalHours += GetCell(TotalHoursColumn, index).Value;
-					}
-				}
+				AddHoursAtRow(index);
 			}
 		}
 
-        private void ProcessSheet(long index)
+        private void AddHoursAtRow(long index)
 		{
+			string discipline = GetCell(DisciplineColumn, index).Value;
+            discipline = discipline.Replace(" ", "").Replace("(Экзаменатор)", "");
 
+			if (!hoursPerDiscipline.ContainsKey(discipline)) // есть ли дисциплина в словаре
+			{
+				hoursPerDiscipline.Add(discipline, new WorkHours()); // если нету то добавляем с значением часов равным 0
+			}
+
+            WorkHours hours = hoursPerDiscipline[discipline];
+
+            var budgetValue = GetCell(TotalBudgetHoursColumn, index).Value;
+            var nonBudgetValue = GetCell(TotalNonBudgetHoursColumn, index).Value;
+
+            if(budgetValue != null)
+			{
+				hours.budget += budgetValue;
+			}
+			if(nonBudgetValue != null)
+			{
+				hours.nonBudget += nonBudgetValue; 
+            }
+
+			//hoursPerDiscipline[discipline] += GetCell(TotalHoursColumn, index).Value;
+	    }
+
+		private Range GetCell(string row, long column)
+		{
+			return sheet.Range[String.Format("{0}{1}", row, column)];
 		}
 	}
 }
