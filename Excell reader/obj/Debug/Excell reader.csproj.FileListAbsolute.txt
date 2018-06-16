@@ -46,7 +46,6 @@ C:\Users\miliq\Desktop\Excell reader\Excell reader\obj\Debug\Excell reader.cspro
 C:\Users\miliq\Desktop\Диплом\Excell reader\bin\Debug\Excell reader.exe.config
 C:\Users\miliq\Desktop\Диплом\Excell reader\bin\Debug\Excell reader.exe
 C:\Users\miliq\Desktop\Диплом\Excell reader\bin\Debug\Excell reader.pdb
-C:\Users\miliq\Desktop\Диплом\Excell reader\obj\Debug\Excell reader.csprojResolveAssemblyReference.cache
 C:\Users\miliq\Desktop\Диплом\Excell reader\obj\Debug\MainWindow.g.cs
 C:\Users\miliq\Desktop\Диплом\Excell reader\obj\Debug\App.g.cs
 C:\Users\miliq\Desktop\Диплом\Excell reader\obj\Debug\Excell reader_MarkupCompile.cache
@@ -58,3 +57,4 @@ C:\Users\miliq\Desktop\Диплом\Excell reader\obj\Debug\Excell reader.csproj
 C:\Users\miliq\Desktop\Диплом\Excell reader\obj\Debug\Excell reader.csproj.CoreCompileInputs.cache
 C:\Users\miliq\Desktop\Диплом\Excell reader\obj\Debug\Excell reader.exe
 C:\Users\miliq\Desktop\Диплом\Excell reader\obj\Debug\Excell reader.pdb
+C:\Users\miliq\Desktop\Диплом\Excell reader\obj\Debug\Excell reader.csprojAssemblyReference.cache
