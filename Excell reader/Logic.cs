@@ -16,6 +16,7 @@ namespace Excel_reader
     { 
         public double budget;
 		public double nonBudget;
+        public string group;
 
         public double TotalHours
 		{
@@ -36,7 +37,7 @@ namespace Excel_reader
 
 
 		private const long StartingRow = 6;
-
+       
 		private Application.Worksheet sheet;
         private Application.Workbook wrbk;
 
@@ -57,7 +58,7 @@ namespace Excel_reader
 
 			Application.Workbooks wrbks = app.Workbooks;
 			wrbk = app.Workbooks.Open(Path.Combine(Environment.CurrentDirectory, FirstFile));
-
+           
 			try
 			{
 				for (int sheetIndex = 1; sheetIndex <= wrbk.Worksheets.Count; sheetIndex++)
@@ -86,8 +87,8 @@ namespace Excel_reader
                         ", Не бюджет: " + hoursPerDiscipline[disciplineName].nonBudget +
 						", Всего: " + hoursPerDiscipline[disciplineName].TotalHours + "\n";
 				}
-
-				System.Windows.MessageBox.Show(output + "\nElapsed time: " + stopwatch.Elapsed + "\nDiscipline count = " + hoursPerDiscipline.Count);
+                
+                System.Windows.MessageBox.Show(output + "\nElapsed time: " + stopwatch.Elapsed + "\nDiscipline count = " + hoursPerDiscipline.Count);
 			}
 		}
 
@@ -152,5 +153,17 @@ namespace Excel_reader
 		{
 			return sheet.Range[String.Format("{0}{1}", row, column)];
 		}
-	}
+        public void FillTemplat(string Template)
+        {
+            Application.Application app = new Application.Application { DisplayAlerts = true };
+
+            Application.Workbooks wrbks = app.Workbooks;
+            wrbk = app.Workbooks.Open(Path.Combine(Environment.CurrentDirectory, Template));
+            foreach (var discipline in hoursPerDiscipline.Keys)
+            {
+              //  sheet.(discipline, hoursPerDiscipline[discipline].budget, hoursPerDiscipline[discipline]nonBbudget);
+            }
+        }
+
+    }
 }
