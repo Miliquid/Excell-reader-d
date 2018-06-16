@@ -10,3 +10,7 @@ Excell reader/obj/Debug/Excell reader_MarkupCompile.lref
 .vs/Excell reader/v15/.suo
 *.txt
 *.cache
+*.ide-wal
+*.ide
+*.ide-shm
+.vs/Excell reader/v15/Server/sqlite3/storage.ide
