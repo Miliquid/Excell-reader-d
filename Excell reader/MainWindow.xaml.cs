@@ -67,6 +67,7 @@ namespace Excel_reader
             var Lo = new Logic();
             
             Lo.Read(FFile.Text, Fio.Text, semestr.SelectedIndex);
+          //  Lo.FillTemplat(Sfile.Text);
 
         }
 

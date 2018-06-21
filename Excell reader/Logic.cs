@@ -45,7 +45,8 @@ namespace Excel_reader
         private int selectedSemester;
         private double totalHours = 0;
 
-        private Dictionary<string, WorkHours> hoursPerDiscipline = new Dictionary<string, WorkHours>();
+      //  private Dictionary<string, WorkHours> hoursPerDiscipline = new Dictionary<string, WorkHours>();
+        private Dictionary<string, Dictionary<string, WorkHours>> hoursPerDiscipline = new Dictionary<string, Dictionary<string, WorkHours>>();
 
 		public void Read(string FirstFile, string TeacherFio, int SemestrInsert)
 		{
@@ -80,16 +81,16 @@ namespace Excel_reader
 
                 string output = "";
 
-                foreach(var disciplineName in hoursPerDiscipline.Keys)
-				{
-					output += "Часов по предмету " + disciplineName + 
-                        ": Бюджет: " + hoursPerDiscipline[disciplineName].budget +
-                        ", Не бюджет: " + hoursPerDiscipline[disciplineName].nonBudget +
-						", Всего: " + hoursPerDiscipline[disciplineName].TotalHours + "\n";
-				}
-                
+    //            foreach(var disciplineName in hoursPerDiscipline.Keys)
+				//{
+				//	output += "Часов по предмету " + disciplineName + 
+    //                    ": Бюджет: " + hoursPerDiscipline[disciplineName].budget +
+    //                    ", Не бюджет: " + hoursPerDiscipline[disciplineName].nonBudget +
+				//		", Всего: " + hoursPerDiscipline[disciplineName].TotalHours + "\n";
+				//}
+
                 System.Windows.MessageBox.Show(output + "\nElapsed time: " + stopwatch.Elapsed + "\nDiscipline count = " + hoursPerDiscipline.Count);
-			}
+            }
 		}
 
 		private void ProcessSheet(long index)
@@ -153,7 +154,7 @@ namespace Excel_reader
 		{
 			return sheet.Range[String.Format("{0}{1}", row, column)];
 		}
-        public void FillTemplat(string Template)
+       /* public void FillTemplat(string Template)
         {
             Application.Application app = new Application.Application { DisplayAlerts = true };
 
@@ -163,7 +164,7 @@ namespace Excel_reader
             {
               //  sheet.(discipline, hoursPerDiscipline[discipline].budget, hoursPerDiscipline[discipline]nonBbudget);
             }
-        }
+        }*/
 
     }
 }
