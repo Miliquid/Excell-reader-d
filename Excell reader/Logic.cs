@@ -30,9 +30,10 @@ namespace Excel_reader
 		private const string DisciplineColumn = "E";
 		private const string SemesterColumn = "F";
 		private const string TeacherColumn = "P";
-		//private const string TotalHoursColumn = "S";
+		
         private const string TotalBudgetHoursColumn = "V";
         private const string TotalNonBudgetHoursColumn = "W";
+        private const string GroupColumIndex = "G";
 
 
 		private const long StartingRow = 6;
@@ -44,8 +45,8 @@ namespace Excel_reader
         private int selectedSemester;
         private double totalHours = 0;
 
-        private Dictionary<string, WorkHours> hoursPerDiscipline = new Dictionary<string, WorkHours>();
-
+    //    private Dictionary<string, WorkHours> hoursPerDiscipline = new Dictionary<string, WorkHours>();
+       private Dictionary<string, Dictionary<string, WorkHours>> hoursPerDiscipline = new Dictionary<string, Dictionary<string, WorkHours>>();
 		public void Read(string FirstFile, string TeacherFio, int SemestrInsert)
 		{
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -79,17 +80,20 @@ namespace Excel_reader
 
                 string output = "";
 
-                foreach(var disciplineName in hoursPerDiscipline.Keys)
-				{
-					output += "Часов по предмету " + disciplineName + 
-                        ": Бюджет: " + hoursPerDiscipline[disciplineName].budget +
-                        ", Не бюджет: " + hoursPerDiscipline[disciplineName].nonBudget +
-						", Всего: " + hoursPerDiscipline[disciplineName].TotalHours + "\n";
-				}
+                foreach (var disciplineName in hoursPerDiscipline.Keys)
+                {
+                    foreach (var groupName in hoursPerDiscipline[disciplineName].Keys)
+                    {
+                        output += groupName + " Часов по предмету " + disciplineName +
+                            ": Бюджет: " + hoursPerDiscipline[disciplineName][groupName].budget +
+                            ", Не бюджет: " + hoursPerDiscipline[disciplineName][groupName].nonBudget +
+                            ", Всего: " + hoursPerDiscipline[disciplineName][groupName].TotalHours + "\n";
+                    }
+                }
 
-				System.Windows.MessageBox.Show(output + "\nElapsed time: " + stopwatch.Elapsed + "\nDiscipline count = " + hoursPerDiscipline.Count);
-			}
-		}
+                System.Windows.MessageBox.Show(output + "\nElapsed time: " + stopwatch.Elapsed + "\nDiscipline count = " + hoursPerDiscipline.Count);
+            }
+        }
 
 		private void ProcessSheet(long index)
 		{
@@ -122,30 +126,45 @@ namespace Excel_reader
 		}
 
         private void AddHoursAtRow(long index)
-		{
-			string discipline = GetCell(DisciplineColumn, index).Value;
+        { 
+            string discipline = GetCell(DisciplineColumn, index).Value;
             discipline = discipline.Replace(" ", "").Replace("(Экзаменатор)", "");
-
-			if (!hoursPerDiscipline.ContainsKey(discipline)) // есть ли дисциплина в словаре
-			{
-				hoursPerDiscipline.Add(discipline, new WorkHours()); // если нету то добавляем с значением часов равным 0
-			}
-
-            WorkHours hours = hoursPerDiscipline[discipline];
-
-            var budgetValue = GetCell(TotalBudgetHoursColumn, index).Value;
-            var nonBudgetValue = GetCell(TotalNonBudgetHoursColumn, index).Value;
-
-            if(budgetValue != null)
-			{
-				hours.budget += budgetValue;
-			}
-			if(nonBudgetValue != null)
-			{
-				hours.nonBudget += nonBudgetValue; 
+            string groupname = GetCell(GroupColumIndex, index).Value;
+          
+            if (!hoursPerDiscipline.ContainsKey(discipline)) // есть ли дисциплина в словаре
+            {   
+                hoursPerDiscipline.Add(discipline, new Dictionary<string, WorkHours>() { { groupname, new WorkHours() } }); // если нету то добавляем с значением часов равным 0 
+                
+                
+            }
+            if (!hoursPerDiscipline[discipline].ContainsKey(groupname))
+            {
+                hoursPerDiscipline[discipline].Add(groupname, new WorkHours());
+              //  if (hoursPerDiscipline[discipline].ContainsKey(groupname)) { System.Windows.MessageBox.Show("Я РАБОТАЮ"); }
             }
 
-			//hoursPerDiscipline[discipline] += GetCell(TotalHoursColumn, index).Value;
+            WorkHours hours = hoursPerDiscipline[discipline][groupname];
+
+            foreach (var gropName in hoursPerDiscipline[discipline].Keys)
+            {
+                
+                
+                var budgetValue = GetCell(TotalBudgetHoursColumn, index).Value;
+                var nonBudgetValue = GetCell(TotalNonBudgetHoursColumn, index).Value;
+
+                if (budgetValue != null)
+                {
+                    hours.budget += budgetValue;
+                }
+                
+                if (nonBudgetValue != null)
+                {
+                    hours.nonBudget += nonBudgetValue;
+                }
+                
+            }
+                
+			
 	    }
 
 		private Range GetCell(string row, long column)
