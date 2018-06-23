@@ -145,7 +145,7 @@ namespace Excel_reader
 
             WorkHours hours = hoursPerDiscipline[discipline][groupname];
 
-            foreach (var gropName in hoursPerDiscipline[discipline].Keys)
+            foreach (var gropName in hoursPerDiscipline[discipline].Keys) // вероятно здесь проблема
             {
                 
                 
