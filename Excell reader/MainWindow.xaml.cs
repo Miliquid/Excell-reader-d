@@ -1,9 +1,5 @@
-﻿using System;
-using System.IO;
-//using System.Windows.Shapes;
-using System.Runtime.InteropServices;
+﻿using System.IO;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Forms;
 using Application = Microsoft.Office.Interop.Excel;
 
@@ -29,18 +25,18 @@ namespace Excel_reader
 
         private void OpenFile_Click(object sender, RoutedEventArgs e)
         {
-            var d = new OpenFileDialog();
+          
 
 
-            d.InitialDirectory = @"C:\\";
-            d.Filter = "excel files (*.xls, *.xlsx)|*.xls;*.xlsx";
-            d.FilterIndex = 2;
-            d.RestoreDirectory = true;
+        
+            using  (var fl = new FolderBrowserDialog())
 
-            if (d.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                // string kj= Path.GetDirectoryName(d.FileName);
-                Sfile.Text = d.FileName;
+            if (fl.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {var d = fl.SelectedPath;
+
+                    FileInfo targetDir = new FileInfo(d);
+                    Sfile.Text = targetDir.FullName;
+                    
             }
 
         }
@@ -65,8 +61,13 @@ namespace Excel_reader
         private void Button_Click(object sender, RoutedEventArgs e)
         {app = new Application.Application { DisplayAlerts = true };
             var Lo = new Logic();
-            
-            Lo.Read(FFile.Text, Fio.Text, semestr.SelectedIndex);
+
+
+            if (Sfile.Text == null)
+            {
+                System.Windows.MessageBox.Show("Введите путь сохранения");
+            }
+            else { Lo.Read(FFile.Text, Fio.Text, semestr.SelectedIndex, Sfile.Text); }
 
         }
 

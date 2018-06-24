@@ -11,11 +11,11 @@
         <Button x:Name="OpenFileF" Content="..." HorizontalAlignment="Left" Margin="160,193,0,0" VerticalAlignment="Top" Width="32" Height="23" Click="OpenFileF_Click"/>
         <Label x:Name="lb" Content="Фамилия И.О преподавателя" HorizontalAlignment="Left" Margin="175,50,0,0" VerticalAlignment="Top"/>
         <Button x:Name="OpenFile" Content="..." HorizontalAlignment="Left" Margin="421,193,0,0" VerticalAlignment="Top" Width="32" Click="OpenFile_Click" Height="23"/>
-        <TextBox x:Name="Sfile" HorizontalAlignment="Left" Height="23" Margin="284,193,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="Sfile" HorizontalAlignment="Left" Height="23" Margin="284,193,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="FFile" HorizontalAlignment="Left" Height="23" Margin="35,193,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
         <Button Content="Собрать" HorizontalAlignment="Left" Margin="221,278,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <Label Content="Выберите первый файл" HorizontalAlignment="Left" Margin="35,153,0,0" VerticalAlignment="Top"/>
-        <Label Content="Выберите второй файл" HorizontalAlignment="Left" Margin="289,153,0,0" VerticalAlignment="Top"/>
+        <Label Content="Выберите файл нагрузки" HorizontalAlignment="Left" Margin="35,153,0,0" VerticalAlignment="Top"/>
+        <Label Content="Укажите путь сохранения" HorizontalAlignment="Left" Margin="289,153,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="Fio" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="197,81,0,0"/>
         <ComboBox x:Name="semestr" HorizontalAlignment="Left" Margin="399,66,0,0" VerticalAlignment="Top" Width="87" SelectedIndex="0" Background="White" BorderBrush="#FF290F0F">
             <TextBox Text="Семестр:"/>

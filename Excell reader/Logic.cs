@@ -2,11 +2,7 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using Application = Microsoft.Office.Interop.Excel;
 using Range = Microsoft.Office.Interop.Excel.Range;
 
@@ -47,7 +43,7 @@ namespace Excel_reader
 
            private Dictionary<string, string> hoursPerDisciplineNoSpace = new Dictionary<string, string>();
         private Dictionary<string, Dictionary<string, WorkHours>> hoursPerDiscipline = new Dictionary<string, Dictionary<string, WorkHours>>();
-        public void Read(string FirstFile, string TeacherFio, int SemestrInsert)
+        public void Read(string FirstFile, string TeacherFio, int SemestrInsert, string SaveWay)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
@@ -79,7 +75,7 @@ namespace Excel_reader
                 Marshal.ReleaseComObject(wrbks);
 
 
-                FillTemplate();
+                FillTemplate(SaveWay);
                 //System.Windows.MessageBox.Show(output + "\nElapsed time: " + stopwatch.Elapsed + "\nDiscipline count = " + hoursPerDiscipline.Count);
             }
         }
@@ -131,13 +127,12 @@ namespace Excel_reader
             if (!hoursPerDiscipline[discipline].ContainsKey(groupname))
             {
                 hoursPerDiscipline[discipline].Add(groupname, new WorkHours());
-                //  if (hoursPerDiscipline[discipline].ContainsKey(groupname)) { System.Windows.MessageBox.Show("Я РАБОТАЮ"); }
             }
 
             
 
-            foreach (var gropName in hoursPerDiscipline[discipline].Keys) // вероятно здесь проблема
-            {WorkHours hours = hoursPerDiscipline[discipline][groupname];
+          
+                WorkHours hours = hoursPerDiscipline[discipline][groupname];
 
 
                 var budgetValue = GetCell(TotalBudgetHoursColumn, index).Value;
@@ -153,14 +148,14 @@ namespace Excel_reader
                     hours.nonBudget += nonBudgetValue;
                 }
 
-            }
+          
 
 
         }
-        private void FillTemplate()
+        public void FillTemplate(string SaveWay)
         {
             Application.Application exl = new Application.Application();
-
+            SaveWay += "\\" + selectedTeacher + ".xls";
             if (exl == null)
             {
                 System.Windows.MessageBox.Show("Проверьте инсталляцию MS Excel");
@@ -191,10 +186,10 @@ namespace Excel_reader
                 }
             } 
 
-            xlBook.SaveAs("e:\\test.xls", Application.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Application.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+            xlBook.SaveAs(SaveWay, Application.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Application.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
             xlBook.Close(true, misValue, misValue);
             exl.Quit();
-
+            System.Windows.MessageBox.Show("Файл Готов. Путь к файлу" + SaveWay);
             Marshal.ReleaseComObject(xlSheet);
             Marshal.ReleaseComObject(xlBook);
             Marshal.ReleaseComObject(exl);
