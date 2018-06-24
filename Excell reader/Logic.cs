@@ -43,15 +43,15 @@ namespace Excel_reader
 
         private string selectedTeacher;
         private int selectedSemester;
-        private double totalHours = 0;
 
-        //    private Dictionary<string, WorkHours> hoursPerDiscipline = new Dictionary<string, WorkHours>();
+
+           private Dictionary<string, string> hoursPerDisciplineNoSpace = new Dictionary<string, string>();
         private Dictionary<string, Dictionary<string, WorkHours>> hoursPerDiscipline = new Dictionary<string, Dictionary<string, WorkHours>>();
         public void Read(string FirstFile, string TeacherFio, int SemestrInsert)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            selectedTeacher = TeacherFio.Replace(" ", "").Replace(".", "");
+            selectedTeacher = TeacherFio.Replace(" ", string.Empty).Replace(".", string.Empty);
             selectedSemester = SemestrInsert;
 
             Application.Application app = new Application.Application { DisplayAlerts = true };
@@ -78,18 +78,7 @@ namespace Excel_reader
                 Marshal.ReleaseComObject(wrbk);
                 Marshal.ReleaseComObject(wrbks);
 
-                string output = "";
 
-                /* foreach (var disciplineName in hoursPerDiscipline.Keys)
-                 {
-                     foreach (var groupName in hoursPerDiscipline[disciplineName].Keys)
-                     {
-                         output += groupName + " Часов по предмету " + disciplineName +
-                             ": Бюджет: " + hoursPerDiscipline[disciplineName][groupName].budget +
-                             ", Не бюджет: " + hoursPerDiscipline[disciplineName][groupName].nonBudget +
-                             ", Всего: " + hoursPerDiscipline[disciplineName][groupName].TotalHours + "\n";
-                     }
-                 }*/
                 FillTemplate();
                 //System.Windows.MessageBox.Show(output + "\nElapsed time: " + stopwatch.Elapsed + "\nDiscipline count = " + hoursPerDiscipline.Count);
             }
@@ -128,11 +117,13 @@ namespace Excel_reader
         private void AddHoursAtRow(long index)
         {
             string discipline = GetCell(DisciplineColumn, index).Value;
+            string disciplineNoSpace = GetCell(DisciplineColumn, index).Value;
             discipline = discipline.Replace(" ", "").Replace("(Экзаменатор)", "");
             string groupname = GetCell(GroupColumIndex, index).Value;
 
             if (!hoursPerDiscipline.ContainsKey(discipline)) // есть ли дисциплина в словаре
             {
+                hoursPerDisciplineNoSpace.Add(discipline, disciplineNoSpace);
                 hoursPerDiscipline.Add(discipline, new Dictionary<string, WorkHours>() { { groupname, new WorkHours() } }); // если нету то добавляем с значением часов равным 0 
 
 
@@ -143,10 +134,10 @@ namespace Excel_reader
                 //  if (hoursPerDiscipline[discipline].ContainsKey(groupname)) { System.Windows.MessageBox.Show("Я РАБОТАЮ"); }
             }
 
-            WorkHours hours = hoursPerDiscipline[discipline][groupname];
+            
 
             foreach (var gropName in hoursPerDiscipline[discipline].Keys) // вероятно здесь проблема
-            {
+            {WorkHours hours = hoursPerDiscipline[discipline][groupname];
 
 
                 var budgetValue = GetCell(TotalBudgetHoursColumn, index).Value;
@@ -191,7 +182,7 @@ namespace Excel_reader
             foreach (var disciplineName in hoursPerDiscipline.Keys) 
             { foreach (var groupname in hoursPerDiscipline[disciplineName].Keys)
                 {
-                    xlSheet.Cells[i, 1] = disciplineName; //"Часов по предмету " + disciplineName +
+                    xlSheet.Cells[i, 1] = hoursPerDisciplineNoSpace[disciplineName]; //"Часов по предмету " + disciplineName +
                     xlSheet.Cells[i, 2] = groupname;
                     xlSheet.Cells[i, 3] = hoursPerDiscipline[disciplineName][groupname].budget;// ": Бюджет: " + hoursPerDiscipline[disciplineName].budget + 
                     xlSheet.Cells[i, 4] = hoursPerDiscipline[disciplineName][groupname].nonBudget; //", Не бюджет: " + hoursPerDiscipline[disciplineName].nonBudget + 
